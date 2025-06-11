@@ -1,7 +1,7 @@
 import { getAuth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 export async function GET(_: Request) {
-  // You need vpn to make it works in local env
+  // You may need vpn to make it works in local env
   const auth = await getAuth()
   const res = await auth.api.signInSocial({
     body: {
