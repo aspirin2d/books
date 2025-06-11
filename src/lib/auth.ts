@@ -25,7 +25,7 @@ export async function getAuth() {
     },
     emailAndPassword: {
       enabled: true,
-      requireEmailVerification: true
+      requireEmailVerification: false,
     },
     emailVerification: {
       sendOnSignUp: true, // Automatically sends a verification email at signup

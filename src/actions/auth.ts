@@ -8,13 +8,13 @@ type FormState = {
 
 export async function signUp(
   _: FormState,
-  payload: { username: string, password: string, email: string }
+  payload: { name: string, password: string, email: string }
 ): Promise<FormState> {
   const auth = await getAuth();
   try {
     await auth.api.signUpEmail({
       body: {
-        name: payload.username,
+        name: payload.name,
         email: payload.email,
         password: payload.password,
         callbackURL: process.env.APP_HOST

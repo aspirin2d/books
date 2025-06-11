@@ -5,7 +5,10 @@ import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    loader: "custom",
+    loaderFile: "./image-loader.ts",
+  },
 };
 
 export default nextConfig;
