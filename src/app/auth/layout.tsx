@@ -15,7 +15,7 @@ export default function Layout({
             <CardContent className="grid p-0 md:grid-cols-2">
               {children}
               <div className="bg-muted relative hidden md:block">
-                <Image src="/welcome.png" alt="welcome" fill objectFit="cover" />
+                <Image src="/welcome.jpg" alt="welcome" fill objectFit="cover" />
               </div>
             </CardContent>
           </Card>
