@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "boox",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,8 @@
     "lint": "next lint",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy && wrangler secret bulk .env.production",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "prisma-gen": "prisma generate",
+    "prisma:gen": "prisma generate",
+    "prisma:diff": "bash shell/prisma-diff.sh",
     "cf-types-gen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts"
   },
   "dependencies": {
