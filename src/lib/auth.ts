@@ -7,7 +7,6 @@ import prismaClients from "@/lib/prisma";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { nextCookies } from "better-auth/next-js";
 
-
 export async function getAuth() {
   const { env } = await getCloudflareContext({ async: true })
   const db = prismaClients.fetch(env.DB)
