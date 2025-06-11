@@ -29,7 +29,7 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <head />
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`text-foreground group/body overscroll-none font-sans antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)] ${geistSans.variable} ${geistMono.variable} antialiased theme-default `}
         >
           <ThemeProvider
             attribute="class"
@@ -37,7 +37,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <div className="bg-background relative z-10 flex min-h-svh flex-col">
+              {children}
+            </div>
             <div className="fixed bottom-2 right-2"><ModeToggle /></div>
           </ThemeProvider>
         </body>
