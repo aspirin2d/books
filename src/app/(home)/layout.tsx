@@ -32,12 +32,17 @@ export default function Layout({
                   Bookshelf
                 </Link>
               </Button>
+              <Button variant="ghost">
+                <Link href="/">
+                  Activities
+                </Link>
+              </Button>
             </nav>
             <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
               <SearchButton />
-              <Separator orientation="vertical" />
+              <Separator orientation="vertical" className="hidden sm:flex" />
               <ModeToggle />
-              <Separator orientation="vertical" />
+              <Separator orientation="vertical" className="hidden sm:flex" />
               <ProfileButton />
             </div>
           </div>

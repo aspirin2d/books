@@ -1,5 +1,4 @@
 import { getAuth } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
@@ -8,6 +7,5 @@ export async function GET(request: Request) {
     headers: request.headers
   })
 
-  revalidatePath("/")
-  redirect("/")
+  redirect("/auth/sign-in")
 }

@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
-import { ModeToggle } from "@/components/mode-toggle";
-import ProfileButton from "@/components/profile-btn";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,7 +45,6 @@ export default function RootLayout({
             <div className="bg-background relative z-10 flex min-h-svh flex-col">
               {children}
             </div>
-            <div className="fixed bottom-2 right-2"><ModeToggle /></div>
           </ThemeProvider>
         </body>
       </html>

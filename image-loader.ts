@@ -6,15 +6,14 @@ const normalizeSrc = (src: string) => {
 };
 
 export default function cloudflareLoader({ src, width, quality }: ImageLoaderProps) {
-  return src
-// if (process.env.NODE_ENV === "development") {
-//   // Serve the original image when using `next dev`
-//   return src;
-// }
-// const params = [`width=${width}`];
-// if (quality) {
-//   params.push(`quality=${quality}`);
-// }
-// const paramsString = params.join(",");
-// return `/cdn-cgi/image/${paramsString}/${normalizeSrc(src)}`;
+  if (process.env.NODE_ENV === "development") {
+    // Serve the original image when using `next dev`
+    return src;
+  }
+  const params = [`width=${width}`];
+  if (quality) {
+    params.push(`quality=${quality}`);
+  }
+  const paramsString = params.join(",");
+  return `/cdn-cgi/image/${paramsString}/${normalizeSrc(src)}`;
 }

@@ -54,9 +54,9 @@ export default function EmailSignUpForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8 transition-transform">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center text-center">
-            <h1 className="text-2xl font-bold">Welcome back</h1>
+            <h1 className="text-2xl font-bold">Welcome aboard</h1>
             <p className="text-muted-foreground text-balance">
-              Sign up to RollingSagas
+              Sign up to <Link href="/">RollingSagas</Link>
             </p>
           </div>
           <FormField

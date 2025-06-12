@@ -17,9 +17,17 @@ export async function getAuth() {
       provider: "sqlite",
     }),
     socialProviders: {
+      apple: {
+        clientId: env.APPLE_CLIENT_ID as string,
+        clientSecret: env.APPLE_CLIENT_SECRET as string,
+      },
       google: {
         clientId: env.GOOGLE_CLIENT_ID as string,
         clientSecret: env.GOOGLE_CLIENT_SECRET as string,
+      },
+      facebook: {
+        clientId: env.FACEBOOK_CLIENT_ID as string,
+        clientSecret: env.FACEBOOK_CLIENT_SECRET as string,
       },
     },
     emailAndPassword: {
@@ -51,6 +59,9 @@ export async function getAuth() {
           return console.error({ error });
         }
       },
+    },
+    advanced: {
+      cookiePrefix: "br"
     },
     plugins: [nextCookies()]
   })

@@ -29,7 +29,7 @@ export default function SearchButton() {
   }, [])
 
   return (
-    <>
+    <div className="hidden sm:flex">
       <Button
         variant="ghost"
         className="bg-muted"
@@ -58,6 +58,6 @@ export default function SearchButton() {
         {/*   </CommandGroup> */}
         {/* </CommandList> */}
       </CommandDialog>
-    </>
+    </div>
   )
 }
