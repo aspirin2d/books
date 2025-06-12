@@ -1,6 +1,13 @@
+import ProfileButton from "@/components/profile-btn";
 import { getAuth } from "@/lib/auth";
+import { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Home | Bzbook",
+  description: "...", // TODO: add description
+};
 
 export default async function Home() {
   const auth = await getAuth()

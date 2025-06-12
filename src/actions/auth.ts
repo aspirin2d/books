@@ -1,5 +1,6 @@
 "use server"
 import { getAuth } from "@/lib/auth"
+import { revalidatePath } from "next/cache";
 
 type FormState = {
   success: boolean;
@@ -28,6 +29,7 @@ export async function signUp(
     }
   }
 
+  revalidatePath("/")
   return { success: true }
 }
 
@@ -53,5 +55,6 @@ export async function signIn(
     }
   }
 
+  revalidatePath("/")
   return { success: true }
 }

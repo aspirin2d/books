@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import { ModeToggle } from "@/components/mode-toggle";
+import ProfileButton from "@/components/profile-btn";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RollingSagas",
+  title: "BzRead",
   description: "...", // TODO: add description
 };
 
@@ -27,7 +28,13 @@ export default function RootLayout({
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <head />
+        <head>
+          <link
+            rel="icon"
+            href="/logo.svg"
+            type="image/<png>"
+          />
+        </head>
         <body
           className={`text-foreground group/body overscroll-none font-sans antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)] ${geistSans.variable} ${geistMono.variable} antialiased theme-default `}
         >
