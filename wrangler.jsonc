@@ -16,10 +16,6 @@
   },
   "routes": [
     {
-      "pattern": "books.rollingsagas.com",
-      "custom_domain": true
-    },
-    {
       "pattern": "bzread.com",
       "custom_domain": true
     }
