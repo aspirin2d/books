@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy && wrangler secret bulk .env.production",
+    "deploy": "prisma generate && opennextjs-cloudflare build && opennextjs-cloudflare deploy && wrangler secret bulk .env.production",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "prisma:gen": "prisma generate",
     "prisma:diff": "bash shell/prisma-diff.sh",

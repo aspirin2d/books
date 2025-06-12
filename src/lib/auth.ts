@@ -2,14 +2,14 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { Resend } from "resend";
 import { VerificationEmailParams, verificationEmail } from "@/lib/email";
-import prismaClients from "@/lib/prisma";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { nextCookies } from "better-auth/next-js";
+import { getDbAsync } from "./db";
 
 export async function getAuth() {
   const { env } = await getCloudflareContext({ async: true })
-  const db = prismaClients.fetch(env.DB)
+  const db = await getDbAsync()
   const resend = new Resend(env.RESEND_API_KEY)
   return betterAuth({
     baseURL: env.APP_HOST + "/api/auth",

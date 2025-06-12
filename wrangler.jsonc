@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "books",
+  "name": "bzread",
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-03-01",
   "compatibility_flags": [
@@ -23,7 +23,7 @@
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "books",
+      "service": "bzread",
     },
   ],
   "d1_databases": [
