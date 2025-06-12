@@ -1,5 +1,6 @@
 "use server"
 import { getAuth } from "@/lib/auth"
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { revalidatePath } from "next/cache";
 
 type FormState = {
@@ -12,13 +13,14 @@ export async function signUp(
   payload: { name: string, password: string, email: string }
 ): Promise<FormState> {
   const auth = await getAuth();
+  const { env } = getCloudflareContext()
   try {
     await auth.api.signUpEmail({
       body: {
         name: payload.name,
         email: payload.email,
         password: payload.password,
-        callbackURL: process.env.APP_HOST
+        callbackURL: env.APP_HOST
       },
     })
   } catch (e) {
@@ -39,12 +41,14 @@ export async function signIn(
   payload: { password: string, email: string }
 ): Promise<FormState> {
   const auth = await getAuth();
+  const { env } = getCloudflareContext()
+
   try {
     await auth.api.signInEmail({
       body: {
         email: payload.email,
         password: payload.password,
-        callbackURL: process.env.APP_HOST
+        callbackURL: env.APP_HOST
       },
     })
   } catch (e) {
