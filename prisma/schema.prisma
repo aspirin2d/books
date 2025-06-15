@@ -26,9 +26,10 @@ model User {
   accounts      Account[]
 
   stories           Story[]
-  bookComments      BookComment[]
+  storyComments     StoryComment[]
   chapterComments   ChapterComment[]
   paragraphComments ParagraphComment[]
+  chapterLikes      ChapterLike[]
 
   @@unique([email])
   @@map("user")
@@ -79,19 +80,33 @@ model Verification {
   @@map("verification")
 }
 
+enum Lang {
+  zh
+  en
+}
+
 model Story {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id          String    @id @default(cuid())
+  name        String
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   authorId String
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-  originUrl String @unique // 唯一标识一本小说 key是 originUrl，去掉 query 参数等
-  tags      Tag[]  @relation("storyTags")
-  name      String
-  books Book[]
+  originUrl String?
+  tags      Tag[]   @relation("storyTags")
+
+  lang   Lang
+  mature Boolean @default(false)
+
+  chapters Chapter[]
+  cover    String
+  size     Int // 字数
+  comments StoryComment[]
+  finished Boolean        @default(false)
 
   @@unique([authorId, name])
   @@index([deletedAt])
@@ -102,7 +117,7 @@ model Tag {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  stories    Story[]    @relation("storyTags")
+  stories   Story[]    @relation("storyTags")
   tagValues TagValue[]
 }
 
@@ -113,42 +128,23 @@ model TagValue {
 
   tagId String
   tag   Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
-  lang  String // zh | en https://i18ns.com/languagecode.html
+  lang  Lang
   name  String
 
   @@unique([tagId, lang])
+  @@unique([lang, name])
 }
 
-model Book {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-
-  storyId String
-  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
-  version String // origin | modified | en | zh
-
-  chapters Chapter[]
-  cover    String
-  size     Int // 字数
-  comments BookComment[]
-
-  @@unique([storyId, name])
-  @@index([deletedAt])
-}
-
-model BookComment {
+model StoryComment {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
   content String
-  bookId  String
-  book    Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  storyId String
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
 
   userId String
-  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ChapterComment {
@@ -160,7 +156,7 @@ model ChapterComment {
   chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
   userId String
-  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ParagraphComment {
@@ -172,32 +168,53 @@ model ParagraphComment {
   paragraph   Paragraph @relation(fields: [paragraphId], references: [id], onDelete: Cascade)
 
   userId String
-  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Chapter {
-  id         String           @id @default(cuid())
-  index      Int
-  createdAt  DateTime         @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt  DateTime?
-  bookId     String
-  book       Book             @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  id        String    @id @default(cuid())
+  index     Int
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  storyId   String
+  story     Story     @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  viewCount Int       @default(0)
+
   paragraphs Paragraph[]
   comments   ChapterComment[]
+  likes      ChapterLike[]
 
-  @@unique([bookId, index])
+  @@unique([storyId, index])
   @@index([deletedAt])
   @@index([index])
+}
+
+model ChapterLike {
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@id([userId, chapterId])
+}
+
+enum ParagraphType {
+  text
+  image
 }
 
 model Paragraph {
   id        String             @id @default(cuid())
   index     Int
-  type String // text | image | ad...
+  type      ParagraphType
   content   String
   createdAt DateTime           @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime           @updatedAt
   deletedAt DateTime?
   chapter   Chapter            @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   chapterId String

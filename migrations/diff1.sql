@@ -1,12 +1,70 @@
 -- CreateTable
+CREATE TABLE "user" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "emailVerified" BOOLEAN NOT NULL,
+    "image" TEXT,
+    "createdAt" DATETIME NOT NULL,
+    "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "session" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "expiresAt" DATETIME NOT NULL,
+    "token" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL,
+    "updatedAt" DATETIME NOT NULL,
+    "ipAddress" TEXT,
+    "userAgent" TEXT,
+    "userId" TEXT NOT NULL,
+    CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "account" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "accountId" TEXT NOT NULL,
+    "providerId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "accessToken" TEXT,
+    "refreshToken" TEXT,
+    "idToken" TEXT,
+    "accessTokenExpiresAt" DATETIME,
+    "refreshTokenExpiresAt" DATETIME,
+    "scope" TEXT,
+    "password" TEXT,
+    "createdAt" DATETIME NOT NULL,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "verification" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "identifier" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "expiresAt" DATETIME NOT NULL,
+    "createdAt" DATETIME,
+    "updatedAt" DATETIME
+);
+
+-- CreateTable
 CREATE TABLE "Story" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     "deletedAt" DATETIME,
     "authorId" TEXT NOT NULL,
-    "originUrl" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "originUrl" TEXT,
+    "lang" TEXT NOT NULL,
+    "mature" BOOLEAN NOT NULL DEFAULT false,
+    "cover" TEXT NOT NULL,
+    "size" INTEGER NOT NULL,
+    "finished" BOOLEAN NOT NULL DEFAULT false,
     CONSTRAINT "Story_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -29,28 +87,14 @@ CREATE TABLE "TagValue" (
 );
 
 -- CreateTable
-CREATE TABLE "Book" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-    "deletedAt" DATETIME,
-    "storyId" TEXT NOT NULL,
-    "version" TEXT NOT NULL,
-    "cover" TEXT NOT NULL,
-    "size" INTEGER NOT NULL,
-    CONSTRAINT "Book_storyId_fkey" FOREIGN KEY ("storyId") REFERENCES "Story" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "BookComment" (
+CREATE TABLE "StoryComment" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "content" TEXT NOT NULL,
-    "bookId" TEXT NOT NULL,
+    "storyId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    CONSTRAINT "BookComment_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "Book" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "BookComment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT "StoryComment_storyId_fkey" FOREIGN KEY ("storyId") REFERENCES "Story" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "StoryComment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -79,11 +123,24 @@ CREATE TABLE "ParagraphComment" (
 CREATE TABLE "Chapter" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "index" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     "deletedAt" DATETIME,
-    "bookId" TEXT NOT NULL,
-    CONSTRAINT "Chapter_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "Book" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "storyId" TEXT NOT NULL,
+    "viewCount" INTEGER NOT NULL DEFAULT 0,
+    CONSTRAINT "Chapter_storyId_fkey" FOREIGN KEY ("storyId") REFERENCES "Story" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "ChapterLike" (
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" TEXT NOT NULL,
+    "chapterId" TEXT NOT NULL,
+
+    PRIMARY KEY ("userId", "chapterId"),
+    CONSTRAINT "ChapterLike_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "ChapterLike_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -108,7 +165,10 @@ CREATE TABLE "_storyTags" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Story_originUrl_key" ON "Story"("originUrl");
+CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
 
 -- CreateIndex
 CREATE INDEX "Story_deletedAt_idx" ON "Story"("deletedAt");
@@ -118,12 +178,7 @@ CREATE UNIQUE INDEX "Story_authorId_name_key" ON "Story"("authorId", "name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "TagValue_tagId_lang_key" ON "TagValue"("tagId", "lang");
-
--- CreateIndex
-CREATE INDEX "Book_deletedAt_idx" ON "Book"("deletedAt");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Book_storyId_name_key" ON "Book"("storyId", "name");
+CREATE UNIQUE INDEX "TagValue_lang_name_key" ON "TagValue"("lang", "name");
 
 -- CreateIndex
 CREATE INDEX "Chapter_deletedAt_idx" ON "Chapter"("deletedAt");
@@ -132,7 +187,7 @@ CREATE INDEX "Chapter_deletedAt_idx" ON "Chapter"("deletedAt");
 CREATE INDEX "Chapter_index_idx" ON "Chapter"("index");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Chapter_bookId_index_key" ON "Chapter"("bookId", "index");
+CREATE UNIQUE INDEX "Chapter_storyId_index_key" ON "Chapter"("storyId", "index");
 
 -- CreateIndex
 CREATE INDEX "Paragraph_deletedAt_idx" ON "Paragraph"("deletedAt");
