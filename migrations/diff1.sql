@@ -1,4 +1,3 @@
--- CreateTable
 CREATE TABLE "user" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
@@ -9,7 +8,6 @@ CREATE TABLE "user" (
     "updatedAt" DATETIME NOT NULL
 );
 
--- CreateTable
 CREATE TABLE "session" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "expiresAt" DATETIME NOT NULL,
@@ -22,7 +20,6 @@ CREATE TABLE "session" (
     CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
 CREATE TABLE "account" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "accountId" TEXT NOT NULL,
@@ -40,7 +37,6 @@ CREATE TABLE "account" (
     CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
 CREATE TABLE "verification" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "identifier" TEXT NOT NULL,
@@ -50,7 +46,6 @@ CREATE TABLE "verification" (
     "updatedAt" DATETIME
 );
 
--- CreateTable
 CREATE TABLE "Story" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
@@ -68,14 +63,12 @@ CREATE TABLE "Story" (
     CONSTRAINT "Story_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
 CREATE TABLE "Tag" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
 
--- CreateTable
 CREATE TABLE "TagValue" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -86,7 +79,6 @@ CREATE TABLE "TagValue" (
     CONSTRAINT "TagValue_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
 CREATE TABLE "StoryComment" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -97,7 +89,6 @@ CREATE TABLE "StoryComment" (
     CONSTRAINT "StoryComment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
 CREATE TABLE "ChapterComment" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -108,7 +99,6 @@ CREATE TABLE "ChapterComment" (
     CONSTRAINT "ChapterComment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
 CREATE TABLE "ParagraphComment" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -119,7 +109,6 @@ CREATE TABLE "ParagraphComment" (
     CONSTRAINT "ParagraphComment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
 CREATE TABLE "Chapter" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "index" INTEGER NOT NULL,
@@ -132,7 +121,6 @@ CREATE TABLE "Chapter" (
     CONSTRAINT "Chapter_storyId_fkey" FOREIGN KEY ("storyId") REFERENCES "Story" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
 CREATE TABLE "ChapterLike" (
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" TEXT NOT NULL,
@@ -143,7 +131,6 @@ CREATE TABLE "ChapterLike" (
     CONSTRAINT "ChapterLike_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
 CREATE TABLE "Paragraph" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "index" INTEGER NOT NULL,
@@ -156,7 +143,6 @@ CREATE TABLE "Paragraph" (
     CONSTRAINT "Paragraph_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateTable
 CREATE TABLE "_storyTags" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL,
@@ -164,42 +150,29 @@ CREATE TABLE "_storyTags" (
     CONSTRAINT "_storyTags_B_fkey" FOREIGN KEY ("B") REFERENCES "Tag" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
--- CreateIndex
 CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
 
--- CreateIndex
 CREATE INDEX "Story_deletedAt_idx" ON "Story"("deletedAt");
 
--- CreateIndex
 CREATE UNIQUE INDEX "Story_authorId_name_key" ON "Story"("authorId", "name");
 
--- CreateIndex
 CREATE UNIQUE INDEX "TagValue_tagId_lang_key" ON "TagValue"("tagId", "lang");
 CREATE UNIQUE INDEX "TagValue_lang_name_key" ON "TagValue"("lang", "name");
 
--- CreateIndex
 CREATE INDEX "Chapter_deletedAt_idx" ON "Chapter"("deletedAt");
 
--- CreateIndex
 CREATE INDEX "Chapter_index_idx" ON "Chapter"("index");
 
--- CreateIndex
 CREATE UNIQUE INDEX "Chapter_storyId_index_key" ON "Chapter"("storyId", "index");
 
--- CreateIndex
 CREATE INDEX "Paragraph_deletedAt_idx" ON "Paragraph"("deletedAt");
 
--- CreateIndex
 CREATE INDEX "Paragraph_index_idx" ON "Paragraph"("index");
 
--- CreateIndex
 CREATE UNIQUE INDEX "Paragraph_chapterId_index_key" ON "Paragraph"("chapterId", "index");
 
--- CreateIndex
 CREATE UNIQUE INDEX "_storyTags_AB_unique" ON "_storyTags"("A", "B");
 
--- CreateIndex
 CREATE INDEX "_storyTags_B_index" ON "_storyTags"("B");
