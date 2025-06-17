@@ -1,63 +1,32 @@
 "use client"
 
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command"
-import { Search } from "lucide-react"
-
-import { useState, useEffect } from "react"
-import { Button } from "./ui/button"
+import { useEffect, useState } from "react"
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
+import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command"
+import { CommandEmpty } from "cmdk"
+import { Input } from "./ui/input"
 
 export default function SearchButton() {
   const [open, setOpen] = useState(false)
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen((open) => !open)
-      }
-    }
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
-
   return (
-    <div className="hidden sm:flex">
-      <Button
-        variant="ghost"
-        className="bg-muted"
-        onClick={() => setOpen(true)}
-      >
-        <Search className="text-muted-foreground" />
-        <span className="hidden lg:inline-flex text-muted-foreground">Search story...</span>
-        <span className="inline-flex lg:hidden">Search...</span>
-        <div className="top-1.5 right-1.5 hidden gap-1 sm:flex">
-          <kbd className="bg-background text-muted-foreground pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none [&amp;_svg:not([class*='size-'])]:size-3">
-            ⌘
-          </kbd>
-          <kbd className="bg-background text-muted-foreground pointer-events-none flex h-5 items-center justify-center gap-1 rounded border px-1 font-sans text-[0.7rem] font-medium select-none [&amp;_svg:not([class*='size-'])]:size-3 aspect-square">
-            K
-          </kbd>
-        </div>
-      </Button>
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Type something to search..." />
-        {/* <CommandList> */}
-        {/*   <CommandEmpty>No results found.</CommandEmpty> */}
-        {/*   <CommandGroup heading="Suggestions"> */}
-        {/*     <CommandItem>Calendar</CommandItem> */}
-        {/*     <CommandItem>Search Emoji</CommandItem> */}
-        {/*     <CommandItem>Calculator</CommandItem> */}
-        {/*   </CommandGroup> */}
-        {/* </CommandList> */}
-      </CommandDialog>
-    </div>
+    <Command className="rounded-full lg:max-w-lg border-0 bg-chart-3/10">
+      <div className="flex items-center px-3">
+        <i className="fa-regular fa-magnifying-glass fa-lg text-muted-foreground" />
+        <Input onFocus={() => setOpen(true)} className="outline-0 border-0 focus-visible:ring-0" placeholder="Search BzReader" />
+      </div>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger />
+        <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()} className="lg:min-w-lg p-1!" sideOffset={16}>
+          <CommandEmpty>No result found.</CommandEmpty>
+          <CommandGroup heading="Suggestions">
+            <CommandList>
+              <CommandItem>
+                Example Item
+              </CommandItem>
+            </CommandList>
+          </CommandGroup>
+        </PopoverContent>
+      </Popover>
+    </Command>
   )
 }

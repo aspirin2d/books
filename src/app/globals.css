@@ -119,4 +119,11 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .react-tooltip {
+    padding: 6px 12px !important;
+    border-radius: 4px !important;
+    font-size: 80%;
+    width: max-content;
+  }
 }

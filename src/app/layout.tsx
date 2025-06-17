@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Tooltip } from "@/components/ReactTooltip";
 import { ThemeProvider } from "@/components/theme-provider"
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,10 +46,12 @@ export default function RootLayout({
           >
             <div className="bg-background relative z-10 flex min-h-svh flex-col">
               {children}
+              <Tooltip id="tp" className="z-60" />
             </div>
           </ThemeProvider>
         </body>
-      </html>
+        <Script src="https://kit.fontawesome.com/d8ee3186cc.js" crossOrigin="anonymous" />
+      </html >
     </>
   )
 }

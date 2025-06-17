@@ -1,49 +1,42 @@
-import { getAuth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { ChevronDown, LogOut, User } from "lucide-react";
+"use client"
 
-import { unstable_cache } from 'next/cache';
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuRadioGroup, DropdownMenuItem } from "./ui/dropdown-menu";
-import { Separator } from "./ui/separator";
+import { ModeToggle } from "./mode-toggle";
+import { User } from "@/lib/auth"
 
-export default async function ProfileButton() {
-  const auth = await getAuth()
-  const h = await headers()
 
-  const session = await unstable_cache(async () => {
-    return await auth.api.getSession({
-      headers: h
-    })
-  }, ["user-session"], { tags: ["user"] })()
+function MenuItem({ link, label, icon }: { link: string, label: string, icon: string }) {
+  return (
+    <DropdownMenuItem asChild className="text-base h-12">
+      <Link href={link} className="px-4 space-x-2">
+        <i className={`fa-light fa-${icon} fa-lg`}></i>
+        <span>{label}</span>
+      </Link>
+    </DropdownMenuItem>
+  )
+}
 
-  if (session) {
+export default function ProfileButton({ user }: { user: User | undefined }) {
+  if (user) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost">
-            {session.user.name}
-            <ChevronDown />
+          <Button variant="ghost" size="icon" className="cursor-pointer rounded-full hover:bg-chart-3/10 size-10" data-tooltip-id="tp" data-tooltip-content={"Open profile menu"} data-tooltip-variant="dark" data-tooltip-place="bottom-end">
+            {!user.image && <i className={`fa-regular fa-user fa-lg`}></i>}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-32 mr-4 text-xl">
+        <DropdownMenuContent className="w-64" sideOffset={14} alignOffset={100} onCloseAutoFocus={(e) => e.preventDefault()}>
+          <MenuItem link="/profile" label="View Profile" icon="user" />
           <DropdownMenuItem asChild>
-            <Link href="/profile" className="font-medium">Profile</Link>
+            <ModeToggle />
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/auth/sign-out" className="font-medium">Sign out</Link>
-          </DropdownMenuItem>
+          <MenuItem link="/auth/sign-out" label="Sign Out" icon="arrow-right-from-bracket" />
         </DropdownMenuContent>
       </DropdownMenu>
     )
   }
 
-  return <>
-    <Button variant="ghost" asChild><Link href="/auth/sign-in">Sign in</Link></Button>
-    <Separator orientation="vertical" />
-    <Button variant="ghost" asChild><Link href="/auth/sign-up">Sign up</Link></Button>
-  </>
-
+  return <Button variant="ghost" asChild><Link href="/auth/sign-up">Sign up</Link></Button>
 }

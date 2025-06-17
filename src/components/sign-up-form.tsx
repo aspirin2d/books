@@ -98,7 +98,6 @@ export default function EmailSignUpForm() {
             )}
           />
           <Button type="submit" disabled={pending}>Sign up</Button>
-
           {state.message && <div className="text-sm font-medium text-red-500">{state.message}</div>}
 
           <SocialAuth />

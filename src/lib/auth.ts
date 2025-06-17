@@ -8,6 +8,18 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { nextCookies } from "better-auth/next-js";
 import { getDbAsync } from "./db";
 
+
+export interface User {
+  id: string;
+  name: string;
+  emailVerified: boolean;
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
+  image?: string | null | undefined;
+}
+
+
 export async function getAuth() {
   const { env } = await getCloudflareContext({ async: true })
   const db = await getDbAsync()
