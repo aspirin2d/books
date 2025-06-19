@@ -10,11 +10,11 @@ import { nextCookies } from 'better-auth/next-js';
 import { headers } from 'next/headers';
 
 export async function getAuth() {
-  const { env } = await getCloudflareContext({ async: true });
-  const db = prismaClients.fetch(env.DB);
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const { env } = await getCloudflareContext({ async: true })
+  const db = prismaClients.fetch(env.DB)
+  const resend = new Resend(env.RESEND_API_KEY)
   return betterAuth({
-    baseURL: process.env.APP_HOST + '/api/auth',
+    baseURL: env.APP_HOST + "/api/auth",
     database: prismaAdapter(db, {
       provider: 'sqlite',
     }),
